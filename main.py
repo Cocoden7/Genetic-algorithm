@@ -53,7 +53,7 @@ def write_on_screen(text, position):
     WINDOW.blit(get_text_image(text), position)
 
 """
-Classe représentant un individu
+Class representing an individual
 """
 
 
@@ -95,7 +95,7 @@ class Particle:
         return self.fitness == 0
 
 """
-Classe pour créer le niveau
+Class for creating the level
 """
 
 
@@ -135,7 +135,7 @@ class Level():
             pygame.draw.rect(WINDOW, (0,252,0), i)
 
 """
-Classe qui permet de gérer le niveau et une population
+Class who deals with the level and a generation
 """
 
 
@@ -188,7 +188,7 @@ class Game:
         write_on_screen("Generation %s" % self.generation, (0, 0))
         pygame.display.update()
 
-    # Classe la population par ordre croissant de score, retourne un tuple
+    # Class the population by croissant order of score
     def get_graded_population(self):
         graded_population = []
         for i in self.population:
@@ -196,7 +196,7 @@ class Game:
         graded_population.sort(key=sort_second)
         return graded_population
 
-    # Retourne la moyenne des fitness
+    # Return the average fitness
     def get_average_fitness(self):
         average = 0.0
         for i in self.population:
@@ -206,28 +206,28 @@ class Game:
     def generate_next_generation(self):
         actual_graded = self.get_graded_population()
 
-        # Ajoute les mieux classés
+        # Add the better ranked ones
         parents = actual_graded[-NUMBER_OF_GRADED_RETAIN:]
 
-        # Ajoute certains plus nuls pour plus de diversité
+        # Add some low scored, for the diversity
         for individual in actual_graded[:(len(actual_graded)-NUMBER_OF_GRADED_RETAIN)]:
             if random.random() < CHANCE_RETAIN_NON_GRADED:
                 parents.append(individual)
 
-        # Mute des individus
+        # Mute individuals
         for individual in parents:
             if random.random() < CHANCE_TO_MUTATE:
                 for i in range(NUMBER_OF_MUTATIONS):
                     individual[2][int(random.random()*len(individual[2]))] = (random.randint(-SPEED_X, SPEED_X),random.randint(-SPEED_Y, SPEED_Y))
 
-        # Les parents font des enfants
+        # Parents make childrens
         child_len = POPULATION_SIZE - len(parents)
         childs = []
         while len(childs) <= child_len:
             child = Particle(pygame.Rect(self.level.start_pos[0], self.level.start_pos[1], TAILLE, TAILLE))
             father = random.choice(parents)
             mother = random.choice(parents)
-            # Si le père et la mère sont les mêmes, on change
+            # If father and mother are the same, we change
             while mother[0] == father[0]:
                 mother = random.choice(parents)
             child.moves = [(0, 0)] * NUMBER_OF_MOVES
@@ -239,7 +239,7 @@ class Game:
             childs.append(child)
         parents.extend(childs)
 
-        # Recréation d'une liste et non d'un tuple
+        # We create a list (and not a tuple)
         new_generation = []
         for i in parents:
             if isinstance(i, tuple):
@@ -283,6 +283,7 @@ def print_all():
     print("NUMBER OF PARTICLES : %s"%len(Game.population))
 
 
+# Generate some graphs
 def graph():
     plt.grid(True)
     plt.subplot(2, 1, 1)
